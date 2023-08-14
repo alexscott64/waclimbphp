@@ -305,16 +305,16 @@
                 </div>
                 <?php
 
-
-
-                function search_array_header($problem, $full)
+                function search_array($problem, $full, $search_key)
                 {
                     $output = array();
                     foreach ($problem as $id => $item) {
-                        if (((isset($full) && ($item["comprehensivetopoonly"] == $full or is_null($item["comprehensivetopoonly"]))) or (is_null($full) && is_null($item["comprehensivetopoonly"]))) && isset($item["area"])) {
-                            $sort = $item['area'];
+                        if (isset($item["comprehensivetopoonly"]) &&
+                            (is_null($full) || $item["comprehensivetopoonly"] == $full) &&
+                            isset($item[$search_key]) && $item[$search_key] != "") {
+                            
+                            $sort = $item[$search_key];
                             $output[$id] = $sort;
-                            $output = array_unique($output);
                         }
                     }
 
@@ -322,42 +322,12 @@
                     return array_keys($output);
                 }
 
-                function search_array_subarea($problem, $full)
-                {
-                    $output = array();
-                    foreach ($problem as $id => $item) {
-                        if (((isset($full) && ($item["comprehensivetopoonly"] == $full or is_null($item["comprehensivetopoonly"]))) or (is_null($full) && is_null($item["comprehensivetopoonly"]))) && $item["subarea"] != "") {
-                            $sort = $item['subarea'];
-                            $output[$id] = $sort;
-                            $output = array_unique($output);
-                        }
-                    }
-
-                    asort($output);
-                    return array_keys($output);
-                }
-
-                function search_array_section($problem, $full)
-                {
-                    $output = array();
-                    foreach ($problem as $id => $item) {
-                        if (((isset($full) && ($item["comprehensivetopoonly"] == $full or is_null($item["comprehensivetopoonly"]))) or (is_null($full) && is_null($item["comprehensivetopoonly"]))) && isset($item["section"])) {
-                            $sort = $item['title'];
-                            $output[$id] = $sort;
-                            $output = array_unique($output);
-                        }
-                    }
-
-                    asort($output);
-                    return array_keys($output);
-                }
+                $areasearch = search_array($problem, $full, 'area');
+                $subareasearch = search_array($problem, $full, 'subarea');
+                $sectionsearch = search_array($problem, $full, 'section');
 
 
-
-
-                $areasearch = search_array_header($problem, $full);
-                $subareasearch = search_array_subarea($problem, $full);
-                $sectionsearch = search_array_section($problem, $full);
+                
                 ?>
 
                 <?php
